@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Prank Settings">
+
+        <SwitchPreferenceCompat
+            app:key="prank_enabled"
+            app:title="Enable Prank Mode"
+            app:summary="Activate prank trigger on calculator result"
+            app:defaultValue="false"
+            app:widgetLayout="@drawable/material_switch" />
+
+        <Preference
+            android:id="@+id/prank_audio_file"
+            app:key="prank_audio_file"
+            app:title="Audio File"
+            app:summary="Select audio file to play" />
+
+        <ListPreference
+            app:key="prank_trigger_mode"
+            app:title="Trigger Mode"
+            app:entries="@array/prank_trigger_mode_entries"
+            app:entryValues="@array/prank_trigger_mode_values"
+            app:defaultValue="EQUALS"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="prank_trigger_value"
+            app:title="Trigger Value"
+            app:summary="Set the value to trigger prank"
+            app:defaultValue="10"
+            android:inputType="numberDecimal" />
+
+        <SwitchPreferenceCompat
+            app:key="prank_audio_looping"
+            app:title="Loop Audio"
+            app:summary="Loop audio when triggered"
+            app:defaultValue="false"
+            app:widgetLayout="@drawable/material_switch" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,7 +1,13 @@
 package com.darkempire78.opencalculator.activities
 
+// Adding Prank Properties
+import com.darkempire78.opencalculator.prank.utils.PrankPreferences
+import com.darkempire78.opencalculator.prank.utils.PrankAudioPlayer
+import com.darkempire78.opencalculator.prank.model.TriggerMode
+
 import android.animation.LayoutTransition
 import android.annotation.SuppressLint
+import android.util.Log
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -64,6 +70,7 @@ import java.util.Locale
 import java.util.UUID
 
 
+
 var appLanguage: Locale = Locale.getDefault()
 var currentTheme: Int = 0
 
@@ -93,6 +100,56 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var historyLayoutMgr: LinearLayoutManager
+
+    //Prank properties
+    private lateinit var prankPlayer: PrankAudioPlayer
+    private lateinit var prankPreferences: PrankPreferences
+    
+
+    private fun checkAndTriggerPrank(result: Double) {
+        Log.d("PRANK", "PRANK: trigger check started")
+        val settings = prankPreferences.getPrankSettings()
+
+        Log.d("PRANK", "PRANK: calculated result = ${result.toLong()}")
+        Log.d("PRANK", "PRANK: configured trigger result = ${settings.triggerValue.toLong()}")
+
+        if (!settings.isPrankEnabled) {
+            Log.d("PRANK", "PRANK: prank is disabled")
+            return
+        }
+
+        if (settings.audioUri == null) {
+            Log.d("PRANK", "PRANK: no audio URI configured")
+            return
+        }
+
+        val shouldTrigger = when (settings.triggerMode) {
+            TriggerMode.EQUALS -> {
+                result.toLong() == settings.triggerValue.toLong()
+            }
+
+            TriggerMode.DIVISIBLE_BY -> {
+                result.toLong() % settings.triggerValue.toLong() == 0L && result != 0.0
+            }
+
+            TriggerMode.CONTAINS_DIGIT -> {
+                result.toLong().toString().contains(settings.triggerValue.toLong().toString())
+            }
+        }
+
+        if (shouldTrigger) {
+            Log.d("PRANK", "PRANK: trigger MATCHED")
+            Log.d("PRANK", "PRANK: configured audio URI = ${settings.audioUri}")
+            prankPlayer.playPrankAudio(settings.audioUri, settings.isAudioLooping)
+        } else {
+            Log.d("PRANK", "PRANK: trigger DID NOT MATCH")
+        }
+    }
+
+    override fun onDestroy() {
+        prankPlayer.stopAudio()
+        super.onDestroy()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -322,6 +379,10 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
+        
+        // Initialization of prank components
+        prankPlayer = PrankAudioPlayer(this)
+        prankPreferences = PrankPreferences(this)
 
     }
 
@@ -1113,6 +1174,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     isEqualLastAction = true
+                    checkAndTriggerPrank(calculationResult.toDouble())
                 } else {
                     withContext(Dispatchers.Main) {
                         if (syntax_error) {

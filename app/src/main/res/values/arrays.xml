@@ -86,4 +86,16 @@
         <item>1000</item> <!-- Infinity -->
     </string-array>
 
+    <string-array name="prank_trigger_mode_entries">
+        <item>Equals</item>
+        <item>Divisible By</item>
+        <item>Contains Digit</item>
+    </string-array>
+
+    <string-array name="prank_trigger_mode_values">
+        <item>EQUALS</item>
+        <item>DIVISIBLE_BY</item>
+        <item>CONTAINS_DIGIT</item>
+    </string-array>
+
 </resources>

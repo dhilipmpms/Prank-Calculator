@@ -8,6 +8,15 @@
         <!--app:iconSpaceReserved="false"-->
 
         <Preference
+            android:id="@+id/prank_settings"
+            app:key="darkempire78.opencalculator.PRANK_SETTINGS"
+            app:selectable="true"
+            app:enabled="true"
+            app:title="Prank Settings"
+            app:summary="Configure prank mode"
+            app:icon="@drawable/theme" />
+
+        <Preference
             android:id="@+id/settings_select_app_language"
             app:key="darkempire78.opencalculator.APP_LANGUAGE"
             app:selectable="true"

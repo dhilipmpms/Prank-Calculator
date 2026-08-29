@@ -21,6 +21,7 @@ import com.darkempire78.opencalculator.R
 import com.darkempire78.opencalculator.Themes
 import com.darkempire78.opencalculator.calculator.parser.NumberingSystem
 import com.darkempire78.opencalculator.util.ScientificMode
+import com.darkempire78.opencalculator.prank.ui.PrankSettingsFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Locale
 
@@ -76,6 +77,16 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            
+            // Prank settings button
+            val prankSettingsPreference = findPreference<Preference>("darkempire78.opencalculator.PRANK_SETTINGS")
+            prankSettingsPreference?.setOnPreferenceClickListener {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.settings, PrankSettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                true
+            }
 
             val appLanguagePreference = findPreference<Preference>("darkempire78.opencalculator.APP_LANGUAGE")
 
